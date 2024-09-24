@@ -1,0 +1,20 @@
+{
+  "name": "advanced-task-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "author": "Oleh Kozlovskyi",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1691.0",
+    "express": "^4.21.0",
+    "serverless": "^4.4.0",
+    "serverless-offline": "^13.8.0",
+    "uuid": "^10.0.0"
+  }
+}

@@ -1,0 +1,62 @@
+service: task-manager
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  environment:
+    TABLE_NAME: TasksTable
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Scan
+            - dynamodb:Query
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: arn:aws:dynamodb:us-east-1:590183827019:table/TasksTable
+
+functions:
+  createTask:
+    handler: functions/createTask.handler
+    events:
+      - http:
+          path: tasks
+          method: post
+  getTasks:
+    handler: functions/getTasks.handler
+    events:
+      - http:
+          path: tasks
+          method: get
+  updateTask:
+    handler: functions/updateTask.handler
+    events:
+      - http:
+          path: tasks/{id}
+          method: put
+  deleteTask:
+    handler: functions/deleteTask.handler
+    events:
+      - http:
+          path: tasks/{id}
+          method: delete
+
+resources:
+  Resources:
+    TasksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.TABLE_NAME}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+plugins:
+  - serverless-offline
