@@ -13,7 +13,7 @@ app.post('/tasks', (req, res) => {
 
 app.get('/tasks', async (req, res) => {
   const command = new InvokeCommand({
-    FunctionName: 'task-manager-dev-getTasks', // Замініть на ім'я вашої Lambda-функції
+    FunctionName: 'task-manager-dev-getTasks',
   });
 
   try {
