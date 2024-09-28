@@ -33,9 +33,9 @@ jobs:
 
       - name: Deploy to EC2
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY_BASE64 }}
         run: |
-          echo "$SSH_PRIVATE_KEY" > key.pem
+          echo "$SSH_PRIVATE_KEY" | base64 --decode > key.pem
           chmod 600 key.pem
           ssh -i key.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd ~/aws-test
