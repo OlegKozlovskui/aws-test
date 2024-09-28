@@ -1,4 +1,4 @@
-name: Deploy to AWS
+name: Deploy to AWS and EC2
 
 on:
   push:
@@ -30,3 +30,14 @@ jobs:
 
       - name: Deploy with Serverless
         run: npx serverless deploy --stage dev
+
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            cd ~/aws-test
+            git pull origin main
+            npm install
+            pm2 restart all
+          EOF
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
