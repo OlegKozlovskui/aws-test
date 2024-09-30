@@ -1,8 +1,10 @@
 import express from 'express';
+import cors from 'cors';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 const lambda = new LambdaClient({ region: 'us-east-1' });
 
