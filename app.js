@@ -4,12 +4,21 @@ import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+
+// Додаткові опції CORS
+const corsOptions = {
+  origin: '*', // або замінити на конкретний домен вашого фронтенду
+  methods: 'GET,POST,PUT,DELETE',
+  allowedHeaders: 'Content-Type,Authorization',
+};
+
+// Використовуйте cors з опціями
+app.use(cors(corsOptions));
 
 const lambda = new LambdaClient({ region: 'us-east-1' });
 
 app.get('/', (req, res) => {
-  res.status(200).json({ message: 'Hello' });
+  res.status(200).json({ message: 'Hello Cors' });
 });
 
 app.post('/tasks', (req, res) => {
