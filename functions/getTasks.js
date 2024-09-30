@@ -3,6 +3,19 @@ import { DynamoDBClient, ScanCommand } from '@aws-sdk/client-dynamodb';
 // Initialize DynamoDB client
 const client = new DynamoDBClient({ region: 'us-east-1' });
 
+function formatDynamoDBResponse(data) {
+  if (Array.isArray(data.tasks)) {
+    return data.tasks.map((task) => {
+      return Object.keys(task).reduce((formattedTask, key) => {
+        // Перевіряємо, чи є ключ "S" і витягуємо його значення
+        formattedTask[key] = task[key].S;
+        return formattedTask;
+      }, {});
+    });
+  }
+  return [];
+}
+
 export const handler = async () => {
   const params = {
     TableName: 'TasksTable',
@@ -13,7 +26,7 @@ export const handler = async () => {
     const data = await client.send(command);
     return {
       statusCode: 200,
-      body: JSON.stringify({ tasks: data.Items }),
+      body: JSON.stringify({ tasks: formatDynamoDBResponse(data.Items) }),
     };
   } catch (error) {
     return {
