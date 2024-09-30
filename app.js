@@ -7,7 +7,7 @@ app.use(express.json());
 const lambda = new LambdaClient({ region: 'us-east-1' });
 
 app.get('/', (req, res) => {
-  res.status(200).json({ message: 'Hello2' });
+  res.status(200).json({ message: 'Hello' });
 });
 
 app.post('/tasks', (req, res) => {
