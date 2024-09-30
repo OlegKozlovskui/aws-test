@@ -3,9 +3,9 @@ import { DynamoDBClient, ScanCommand } from '@aws-sdk/client-dynamodb';
 // Initialize DynamoDB client
 const client = new DynamoDBClient({ region: 'us-east-1' });
 
-function formatDynamoDBResponse(data) {
-  if (Array.isArray(data.tasks)) {
-    return data.tasks.map((task) => {
+function formatDynamoDBResponse(tasks) {
+  if (Array.isArray(tasks)) {
+    return tasks.map((task) => {
       return Object.keys(task).reduce((formattedTask, key) => {
         // Перевіряємо, чи є ключ "S" і витягуємо його значення
         formattedTask[key] = task[key].S;
