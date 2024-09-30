@@ -14,6 +14,7 @@ const corsOptions = {
 
 // Використовуйте cors з опціями
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 const lambda = new LambdaClient({ region: 'us-east-1' });
 
