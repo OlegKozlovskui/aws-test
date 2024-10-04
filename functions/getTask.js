@@ -18,7 +18,7 @@ export const handler = async (event) => {
   const params = {
     TableName: 'TasksTable',
     Key: {
-      id: { S: taskId }, // Використовуємо ID завдання для пошуку
+      id: taskId, // Використовуємо ID завдання для пошуку
     },
   };
 
