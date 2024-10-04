@@ -10,7 +10,7 @@ export const handler = async (event) => {
   const params = {
     TableName: 'TasksTable',
     Key: {
-      id: { S: id },
+      id,
     },
   };
 

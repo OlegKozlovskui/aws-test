@@ -11,7 +11,7 @@ export const handler = async (event) => {
   const params = {
     TableName: 'TasksTable',
     Key: {
-      id: { S: id },
+      id,
     },
     UpdateExpression: 'SET #title = :title, #description = :description, #status = :status',
     ExpressionAttributeNames: {

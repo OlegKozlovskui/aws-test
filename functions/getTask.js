@@ -4,14 +4,6 @@ import { GetCommand } from '@aws-sdk/lib-dynamodb';
 // Initialize DynamoDB client
 const client = new DynamoDBClient({ region: 'us-east-1' });
 
-function formatDynamoDBResponse(task) {
-  return Object.keys(task).reduce((formattedTask, key) => {
-    // Перевіряємо, чи є ключ "S" і витягуємо його значення
-    formattedTask[key] = task[key].S;
-    return formattedTask;
-  }, {});
-}
-
 export const handler = async (event) => {
   const taskId = event.pathParameters.id; // Отримуємо ID з параметрів шляху
 
@@ -35,7 +27,7 @@ export const handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ task: data }),
+      body: JSON.stringify({ ...data.Item }),
     };
   } catch (error) {
     return {
