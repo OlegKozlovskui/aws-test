@@ -26,7 +26,7 @@ export const handler = async () => {
     const data = await client.send(command);
     return {
       statusCode: 200,
-      body: JSON.stringify({ tasks: formatDynamoDBResponse(data.Items) }),
+      body: JSON.stringify({ tasks: data.Items }),
     };
   } catch (error) {
     return {
