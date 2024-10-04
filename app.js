@@ -22,11 +22,6 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'Hello Cors' });
 });
 
-app.post('/tasks', (req, res) => {
-  const task = req.body;
-  res.status(201).json({ message: 'Task created', task });
-});
-
 app.get('/tasks', async (req, res) => {
   const command = new InvokeCommand({
     FunctionName: 'task-manager-dev-getTasks',
@@ -44,6 +39,93 @@ app.get('/tasks', async (req, res) => {
     res.status(500).json({ error: 'Could not invoke Lambda function' });
   }
 });
+
+app.get('/tasks/:id', async (req, res) => {
+  const taskId = req.params.id;
+
+  const command = new InvokeCommand({
+    FunctionName: 'task-manager-dev-getTask', // Ім'я вашої Lambda-функції для отримання конкретного завдання
+    Payload: JSON.stringify({
+      pathParameters: { id: taskId },
+    }),
+  });
+
+  try {
+    const response = await lambda.send(command);
+    const responseBody = JSON.parse(Buffer.from(response.Payload).toString());
+    res.status(responseBody.statusCode).json(JSON.parse(responseBody.body));
+  } catch (error) {
+    console.error('Error invoking Lambda function', error);
+    res.status(500).json({ error: 'Could not invoke Lambda function' });
+  }
+});
+
+app.post('/tasks', async (req, res) => {
+  const taskData = req.body;
+
+  const command = new InvokeCommand({
+    FunctionName: 'task-manager-dev-createTask', // Замініть на ім'я вашої Lambda-функції для створення завдання
+    Payload: JSON.stringify({
+      body: JSON.stringify(taskData),
+    }),
+  });
+
+  try {
+    // Виклик Lambda-функції для створення завдання
+    const response = await lambda.send(command);
+    const responseBody = JSON.parse(Buffer.from(response.Payload).toString());
+
+    // Перетворення відповіді Lambda на формат, який очікує Express.js
+    res.status(responseBody.statusCode).json(JSON.parse(responseBody.body));
+  } catch (error) {
+    console.error('Error invoking Lambda function', error);
+    res.status(500).json({ error: 'Could not invoke Lambda function' });
+  }
+});
+
+// Маршрут для оновлення завдання
+app.put('/tasks/:id', async (req, res) => {
+  const taskId = req.params.id;
+  const updatedTaskData = req.body;
+
+  const command = new InvokeCommand({
+    FunctionName: 'task-manager-dev-updateTask', // Ім'я вашої Lambda-функції для оновлення завдання
+    Payload: JSON.stringify({
+      pathParameters: { id: taskId },
+      body: JSON.stringify(updatedTaskData),
+    }),
+  });
+
+  try {
+    const response = await lambda.send(command);
+    const responseBody = JSON.parse(Buffer.from(response.Payload).toString());
+    res.status(responseBody.statusCode).json(JSON.parse(responseBody.body));
+  } catch (error) {
+    console.error('Error invoking Lambda function', error);
+    res.status(500).json({ error: 'Could not invoke Lambda function' });
+  }
+});
+
+app.delete('/tasks/:id', async (req, res) => {
+  const taskId = req.params.id;
+
+  const command = new InvokeCommand({
+    FunctionName: 'task-manager-dev-deleteTask', // Ім'я вашої Lambda-функції для видалення завдання
+    Payload: JSON.stringify({
+      pathParameters: { id: taskId },
+    }),
+  });
+
+  try {
+    const response = await lambda.send(command);
+    const responseBody = JSON.parse(Buffer.from(response.Payload).toString());
+    res.status(responseBody.statusCode).json(JSON.parse(responseBody.body));
+  } catch (error) {
+    console.error('Error invoking Lambda function', error);
+    res.status(500).json({ error: 'Could not invoke Lambda function' });
+  }
+});
+
 
 // Запуск сервера на конкретному порту
 const PORT = process.env.PORT || 3001;

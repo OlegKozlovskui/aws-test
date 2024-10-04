@@ -31,6 +31,12 @@ functions:
       - http:
           path: tasks
           method: get
+  getTask:
+    handler: functions/getTask.handler
+    events:
+      - http:
+          path: tasks/{id}
+          method: get
   updateTask:
     handler: functions/updateTask.handler
     events:

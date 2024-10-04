@@ -1,4 +1,5 @@
-import { DynamoDBClient, DeleteCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DeleteCommand } from '@aws-sdk/lib-dynamodb';
 
 // Initialize DynamoDB client
 const client = new DynamoDBClient({ region: 'us-east-1' });
