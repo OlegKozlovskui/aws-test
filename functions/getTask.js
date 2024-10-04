@@ -35,7 +35,7 @@ export const handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ task: formatDynamoDBResponse(data.Item) }),
+      body: JSON.stringify({ task: data }),
     };
   } catch (error) {
     return {
