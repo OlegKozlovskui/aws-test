@@ -20,9 +20,9 @@ export const handler = async (event) => {
       '#status': 'status',
     },
     ExpressionAttributeValues: {
-      ':title': { S: title },
-      ':description': { S: description },
-      ':status': { S: status },
+      ':title': title,
+      ':description': description,
+      ':status': status,
     },
     ReturnValues: 'ALL_NEW',
   };
