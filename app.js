@@ -1,8 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
+import multer from 'multer';
 
 const app = express();
+const upload = multer();
 app.use(express.json());
 
 // Додаткові опції CORS
@@ -60,11 +62,24 @@ app.get('/tasks/:id', async (req, res) => {
   }
 });
 
-app.post('/tasks', async (req, res) => {
-  const taskData = req.body;
+app.post('/tasks', upload.single('file'), async (req, res) => {
+  const { title, description } = req.body;
+  const file = req.file;
+
+  // Створюємо об'єкт даних для передачі до Lambda
+  const taskData = {
+    title,
+    description,
+  };
+
+  // Якщо файл завантажено, додаємо його в об'єкт
+  if (file) {
+    taskData.fileName = file.originalname;
+    taskData.fileContent = file.buffer.toString('base64'); // Кодуємо файл у формат base64
+  }
 
   const command = new InvokeCommand({
-    FunctionName: 'task-manager-dev-createTask', // Замініть на ім'я вашої Lambda-функції для створення завдання
+    FunctionName: 'task-manager-dev-createTask', // Замініть на ім'я вашої Lambda-функції
     Payload: JSON.stringify({
       body: JSON.stringify(taskData),
     }),
