@@ -27,7 +27,7 @@ const REDIRECT_URI = 'http://localhost:8080/callback'; // URL, на який Cog
 
 // Маршрут для перенаправлення на Google Sign-In через AWS Cognito
 app.get('/auth/google', (req, res) => {
-  const url = `${COGNITO_DOMAIN}/oauth2/authorize?identity_provider=Google&response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile`;
+  const url = `${COGNITO_DOMAIN}/oauth2/authorize?identity_provider=Google&response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=openid+email+profile`;
   res.redirect(url);
 });
 
