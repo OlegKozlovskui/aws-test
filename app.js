@@ -20,8 +20,8 @@ const corsOptions = {
 // Використовуйте cors з опціями
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
-const CLIENT_ID = '1u4fm24p0a1h89ne0ufqecgiip';
-const CLIENT_SECRET = '1mch48l7a8l3g7ochne15v4c71c7395u6k15th5i6v17orkakim8';
+const CLIENT_ID = '4ltmtu5gbja7bjh4e0da5tmo32';
+const CLIENT_SECRET = '1tui5lhnfno3ll89jdm4qnbq4lrdr34d1ab1jkdvo70tnu1atr66';
 const COGNITO_DOMAIN = 'https://taskmanager-app.auth.us-east-1.amazoncognito.com';
 const REDIRECT_URI = 'http://localhost:8080/callback'; // URL, на який Cognito перенаправляє після Google Sign-In
 
