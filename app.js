@@ -82,8 +82,8 @@ app.get('/user-profile', async (req, res) => {
 
     res.status(200).json({ userAttributes });
   } catch (error) {
-    console.error('Error fetching user profile:', error);
-    res.status(500).json({ error: 'Failed to fetch user profile' });
+    console.error('Error fetching user profile:', error.message || error); // Додано більше логування
+    res.status(500).json({ error: 'Failed to fetch user profile', details: error.message || error });
   }
 });
 
