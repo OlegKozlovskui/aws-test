@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
+import { CognitoIdentityProviderClient, GetUserCommand } from '@aws-sdk/client-cognito-identity-provider';
 import multer from 'multer';
 import axios from 'axios';
 
@@ -60,6 +61,29 @@ app.get('/callback', async (req, res) => {
   } catch (error) {
     console.error('Error exchanging code for tokens:', error);
     res.status(500).json({ error: 'Failed to exchange code for tokens' });
+  }
+});
+
+app.get('/user-profile', async (req, res) => {
+  const accessToken = req.headers.authorization?.split(' ')[1]; // Очікується, що токен буде переданий у заголовку Authorization як Bearer
+  const client = new CognitoIdentityProviderClient({ region: 'us-east-1' });
+  if (!accessToken) {
+    return res.status(401).json({ error: 'Access token is missing' });
+  }
+
+  const command = new GetUserCommand({ AccessToken: accessToken });
+
+  try {
+    const response = await client.send(command);
+    const userAttributes = response.UserAttributes.reduce((acc, attribute) => {
+      acc[attribute.Name] = attribute.Value;
+      return acc;
+    }, {});
+
+    res.status(200).json({ userAttributes });
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    res.status(500).json({ error: 'Failed to fetch user profile' });
   }
 });
 
