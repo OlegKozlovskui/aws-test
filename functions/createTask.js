@@ -1,14 +1,17 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { SNSClient, PublishCommand } from '@aws-sdk/client-sns'
 import { v4 as uuidv4 } from 'uuid';
 
 const dynamoDbClient = new DynamoDBClient({ region: 'us-east-1' });
 const s3Client = new S3Client({ region: 'us-east-1' });
+const snsClient = new SNSClient({ region: 'us-east-1' });
 const bucketName = 'advanced-task-manager';
+const snsTopicArn = 'arn:aws:sns:us-east-1:590183827019:TaskManager';
 
 export const handler = async (event) => {
-  const { title, description, fileName, fileContent } = JSON.parse(event.body);
+  const { title, description, fileName, fileContent, email } = JSON.parse(event.body);
   const taskId = uuidv4();
 
   // Завантаження файлу в S3
@@ -46,6 +49,20 @@ export const handler = async (event) => {
   try {
     const command = new PutCommand(params);
     await dynamoDbClient.send(command);
+
+    const snsMessage = {
+      Subject: 'Task Created Successfully',
+      Message: `Your task "${title}" has been created successfully.`,
+      TopicArn: snsTopicArn, // Використовуємо Topic ARN
+      MessageAttributes: {
+        email: {
+          DataType: 'String',
+          StringValue: email, // Надсилаємо email для повідомлення
+        },
+      },
+    };
+
+    await snsClient.send(new PublishCommand(snsMessage));
     return {
       statusCode: 201,
       body: JSON.stringify({ message: 'Task created', task: params.Item }),
