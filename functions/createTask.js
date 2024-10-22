@@ -57,7 +57,7 @@ export const handler = async (event) => {
       MessageAttributes: {
         email: {
           DataType: 'String',
-          StringValue: email, // Надсилаємо email для повідомлення
+          StringValue: 'kozlovskuioleg@gmail.com', // Надсилаємо email для повідомлення
         },
       },
     };
